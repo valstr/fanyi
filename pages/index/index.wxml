@@ -1,0 +1,36 @@
+
+<!-- index.wxml -->
+<view class="main">
+  <form bindsubmit="formSubmit">
+    <textarea class="t1" name="query" placeholder="请输入要翻译的内容" auto-focus/>
+    <button class="sub" formType="submit">翻译</button>
+
+    <!--音频-->
+    <audio poster="{{poster}}" name="{{name}}" author="{{author}}" src="{{src}}" id="myAudio" controls loop></audio>
+    <view>
+      <button type="primary" bindtap="audioPlay">播放</button>
+      <button type="primary" bindtap="audioPause">暂停</button>
+      <button type="primary" bindtap="audio14">设置当前播放时间为14秒</button>
+      <button type="primary" bindtap="audioStart">回到开头</button>
+    </view>
+    <button type="primary" bindtouchstart="startRecord" bindtouchend="chendRecord">录音</button>
+
+    <!-- 只有返回有值时才显示 -->
+    <block wx:if="{{translate.basic}}">
+      <text class="t2">{{translate.translation}}</text>
+
+      <!--英式发音-->
+      <text>{{translate.basic.uk-phonetic}}</text>
+
+      <!--美式发音 -->
+      <text>{{translate.basic.us-phonetic}}</text>
+      <block wx:for="{{translate.basic.explains}}">
+        <text>{{item.explains+";"}}</text>
+      </block>
+      网络
+      <text class="t2">{{translate.web[0].value}}</text>
+      专业
+      <text class="t2">{{translate.web[1].value}}</text>
+    </block>
+  </form>
+</view>

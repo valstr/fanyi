@@ -1,0 +1,21 @@
+.main{
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20rpx 0;
+}
+
+
+.sub{
+  width:400rpx;
+}
+
+.t1,.t2{
+  margin: 20rpx;
+  border:1px solid #f8f8f8;
+}
+
+.t2{
+  height: 40rpx;
+}
