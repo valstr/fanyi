@@ -6,6 +6,9 @@ Page({
     motto: 'Hello World',
     translate: {},
     textarea: "",
+    j: 1,//帧动画初始图片
+    isSpeaking: false,//是否正在说话
+    voices: [],//音频数组
   },
   //事件处理函数
   bindViewTap: function () {
@@ -51,17 +54,17 @@ Page({
     }
   },
 
-  onLoad: function () {
-    console.log('onLoad')
-    var that = this
-    //调用应用实例的方法获取全局数据
-    app.getUserInfo(function (userInfo) {
-      //更新数据
-      that.setData({
-        userInfo: userInfo
-      })
-    })
-  },
+
+
+
+
+
+
+
+
+
+
+  //初始化去创建录音组件
   onReady: function (e) {
     // 使用 wx.createAudioContext 获取 audio 上下文 context
     this.audioCtx = wx.createAudioContext('myAudio')
@@ -87,7 +90,7 @@ Page({
   //点击录音
   startRecord: function () {
     wx.startRecord(
-      
+
     )
   },
   chendRecord: function () {
@@ -96,5 +99,92 @@ Page({
       //结束录音  
       wx.stopRecord()
     }, 100)
-  }
+  },
+
+  // onLoad: function () {
+  //   console.log('onLoad')
+  //   var that = this
+  //   //调用应用实例的方法获取全局数据
+  //   app.getUserInfo(function (userInfo) {
+  //     //更新数据
+  //     that.setData({
+  //       userInfo: userInfo
+  //     })
+  //   })
+  // },
+
+  data: {
+
+  },
+  onLoad: function () {
+  },
+  //手指按下
+  touchdown: function () {
+    console.log("手指按下了...")
+    console.log("new date : " + new Date)
+    var _this = this;
+    speaking.call(this);
+    this.setData({
+      isSpeaking: true
+    })
+    //开始录音
+    wx.startRecord({
+      success: function (res) {
+        //临时路径,下次进入小程序时无法正常使用tempFilePath为录音文件
+        var tempFilePath = res.tempFilePath
+        console.log("tempFilePath: " + tempFilePath)
+
+        wx.uploadFile({
+          url: 'http://127.0.0.1:8080/', //仅为示例，非真实的接口地址
+          filePath: tempFilePath,
+          name: 'file',
+          success: function (res) {
+            var data = res.data
+
+
+
+          }
+        })
+
+      },
+      fail: function (res) {
+        //录音失败
+        wx.showModal({
+          title: '提示',
+          content: '录音的姿势不对!',
+          showCancel: false,
+          success: function (res) {
+            if (res.confirm) {
+              console.log('用户点击确定')
+              return
+            }
+          }
+        })
+      }
+    })
+  },
+  //手指抬起
+  touchup: function () {
+    console.log("手指抬起了...")
+    this.setData({
+      isSpeaking: false,
+    })
+    clearInterval(this.timer)//录音喇叭图标隐藏
+    wx.stopRecord()
+  },
 })
+
+
+//麦克风帧动画
+function speaking() {
+  var _this = this;
+  //话筒帧动画
+  var i = 1;
+  this.timer = setInterval(function () {
+    i++;
+    i = i % 5;
+    _this.setData({
+      j: i
+    })
+  }, 200);
+}
